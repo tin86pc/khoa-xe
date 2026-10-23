@@ -2759,6 +2759,35 @@ var qrcode = function() {
       updateUI();
       refreshUI();
     });
+
+
+
+    // Thay thế URL bên dưới bằng URL Web App bạn vừa copy ở Bước 1
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUl3ccNuzdlAeDpWec67eogBgbdWmwtpYn7iRhCdx--l__qoJCPM2HFZGBUIY5rk6N/exec";
+
+  function trackVisit() {
+    // Chống đếm trùng lặp liên tục trong cùng một phiên duyệt web (tùy chọn)
+    // Nếu muốn đếm mỗi lần F5 là 1 lượt thì bỏ qua đoạn session Storage này
+    if (sessionStorage.getItem("counted")) return;
+    sessionStorage.setItem("counted", "true");
+
+    const data = {
+      page: window.location.pathname,
+      userAgent: navigator.userAgent
+    };
+
+    fetch(SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors", // Cần thiết khi gọi Apps Script từ tên miền khác (GitHub Pages)
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    }).catch(error => console.error("Tracking error:", error));
+  }
+
+  // Chạy khi trang đã tải xong
+  window.addEventListener("DOMContentLoaded", trackVisit);
   </script>
 </body>
 
